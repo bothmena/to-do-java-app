@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    ObservableList<Task> tasks = FXCollections.observableArrayList();
+    List<Task> tasks;
     int selectedtaskId = 0;
 
     @FXML private Label taskTitle;
