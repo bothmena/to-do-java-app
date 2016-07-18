@@ -34,7 +34,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>8.1.4</version>
                 <configuration>
-                    <mainClass>com.home.Main</mainClass>
+                    <mainClass>com.login.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
@@ -84,6 +84,14 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+
+        <!-- boottstrap fx -->
+        <dependency>
+            <groupId>org.kordamp.bootstrapfx</groupId>
+            <artifactId>bootstrapfx-core</artifactId>
+            <version>0.1.0</version>
+            <type>pom</type>
         </dependency>
 
     </dependencies>

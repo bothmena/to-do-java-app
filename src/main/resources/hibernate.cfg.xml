@@ -11,6 +11,10 @@
         <property name="hibernate.connection.username">matejerc_aymen</property>
         <property name="hibernate.connection.password">love50434012MUFC</property>
 
+        <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.show_sql">true</property>
+
         <mapping class="com.entity.User"/>
 
     </session-factory>

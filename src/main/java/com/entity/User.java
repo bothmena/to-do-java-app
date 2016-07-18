@@ -1,12 +1,10 @@
 package com.entity;
 
-import com.database.ConnectDB;
 import org.mindrot.jbcrypt.BCrypt;
-
 import javax.persistence.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Created by Aymen Ben Othmen on 16/07/16.
@@ -16,20 +14,35 @@ import java.sql.SQLException;
 @Table(name = "user")
 public class User { // extends ConnectDB implements IEntity
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
     @Column(name = "username", nullable = false, length = 15, unique = true)
+    @Length(min = 3, max = 15, message = "username: length must be between 2 and 15")
     private String username;
+
     @Column(name = "email", nullable = false, length = 50, unique = true)
+    @Email(message = "email: not a well-formed email address")
     private String email;
+
     @Column(name = "firstname", nullable = false, length = 31)
+    @Length(min = 2, max = 15, message = "firstname: length must be between 2 and 15")
     public String firstname;
+
     @Column(name = "lastname", nullable = false, length = 31)
+    @Length(min = 2, max = 15, message = "lastname: length must be between 2 and 15")
     private String lastname;
+
     @Column(name = "gender", nullable = false, length = 6)
+    @NotBlank(message = "gender: this property must not be blank")
     private String gender;
-    @Column(name = "password", nullable = false)
+
+    @Column(name = "password", nullable = false, length = 24)
+    @NotBlank(message = "password: this property must not be blank")
     private String password;
+
     @Column(name = "salt", nullable = false)
     private String salt;
 
@@ -50,9 +63,6 @@ public class User { // extends ConnectDB implements IEntity
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
-        /*if ( this.username != "" || this.email != "" ) {
-            fillClass();
-        }*/
     }
 
     public boolean checkPassword(String password) {
@@ -84,7 +94,12 @@ public class User { // extends ConnectDB implements IEntity
         this.username = username;
     }
 
+    public String getFullname() {
+        return String.format("%s %s", firstname, lastname);
+    }
+
     public String getEmail() {
+
         return email;
     }
 
@@ -112,93 +127,11 @@ public class User { // extends ConnectDB implements IEntity
         return gender == "male" ? "Male" : "Female";
     }
 
-    public boolean setGender(String gender) {
+    public void setGender(String gender) {
         if(gender == "male" || gender == "female") {
             this.gender = gender;
-            return true;
-        }
-        return false;
-    }
-
-    /*public boolean createTable() {
-
-        try{
-            String statement = "CREATE TABLE IF NOT EXISTS user ("+
-                    "id INT NOT NULL AUTO_INCREMENT,"+
-                    "username varchar(255) NOT NULL,"+
-                    "email varchar(255) NOT NULL,"+
-                    "firstname varchar(31) NOT NULL,"+
-                    "lastname varchar(31) NOT NULL,"+
-                    "gender varchar(6) DEFAULT NULL,"+
-                    "salt varchar(255) NOT NULL,"+
-                    "password varchar(255) NOT NULL,"+
-                    "PRIMARY KEY (id) )";
-            PreparedStatement preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.executeUpdate();
-            return true;
-        }catch (SQLException ex){
-            System.out.printf("Error occurred when creating user table:%n%s", ex);
-            return false;
-        }finally {
-            System.out.println("Operation completed.");
+        }else{
+            this.gender = "unset";
         }
     }
-
-    public boolean update() {
-        String statement = String.format(
-                "UPDATE user SET username = '%s', email = '%s', firstname = '%s', lastname = '%s', gender = '%s', salt = "+
-                        "'%s', password = '%s' WHERE id = %d", username, email, firstname, lastname, gender, salt, password, id
-        );
-        System.out.printf("Update Query: %s%n", statement);
-        return flush(statement);
-    }
-
-    public boolean insert() {
-        String statement = String.format(
-                "INSERT INTO user (username, email, firstname, lastname, gender, salt, password)"+
-                        " VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", username, email, firstname, lastname,
-                gender, salt, password);
-        System.out.printf("Query To Insert a New User:%n%s%n", statement);
-        return flush(statement);
-    }
-
-    public boolean flush(String statement) {
-        try{
-            PreparedStatement preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.executeUpdate();
-            return true;
-        }catch (SQLException ex){
-            return false;
-        }
-    }
-
-    public void fillClass() {
-        try {
-            ResultSet user = statement.executeQuery(String.format(
-                    "SELECT * FROM user WHERE username = '%s' OR email = '%s' LIMIT 1", username , email
-            ));
-            if ( user.next() ) {
-                id = user.getInt("id");
-                username = user.getString("username");
-                firstname = user.getString("firstname");
-                lastname = user.getString("lastname");
-                email = user.getString("email");
-                gender = user.getString("gender");
-                password = user.getString("password");
-                salt = user.getString("salt");
-            }
-        }catch (SQLException ex){
-            System.out.printf("Error occurred when fetching data from com.database:%n%s", ex);
-        }
-    }
-
-    public ResultSet executeQuery(String query) {
-        try {
-            ResultSet result = statement.executeQuery(query);
-            return result;
-        }catch (SQLException ex){
-            System.out.printf("Error occurred when fetching data from com.database:%n%s", ex);
-            return null;
-        }
-    }*/
 }
